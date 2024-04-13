@@ -1015,7 +1015,7 @@ reverse() 不是指按与字母顺序相反的顺序排列列表元素，而只�
 
 
 
-#### 遍历列表
+#### for 遍历列表
 
 ```python
 magicians = ['alice', 'david', 'carolina']
@@ -1023,38 +1023,136 @@ for magician in magicians:
     print(magician)
 ```
 
-python 首先获取列表 magicians 中的第一个值 'alice' , 并将其存储到变量 magician 中。
-接下来执行print ，由于该列表中还包含其他值，python返回到循环的第一行，python获取列表中的下一个名字，'david' ,并将其存储到变量 magician 中
+python 首先获取列表 magicians 中的第一个值 'alice' , 并将其存储到变量 magician 中, 然后执行print 
+
+由于该列表中还包含其他值，python返回到循环的第一行，python获取列表中的下一个名字，'david' ,并将其存储到变量 magician 中
 
 
 
-![image-20240131135148423](C:\Users\89388\AppData\Roaming\Typora\typora-user-images\image-20240131135148423.png)
+#### List Comprehensions
 
-![image-20240131135209779](C:\Users\89388\AppData\Roaming\Typora\typora-user-images\image-20240131135209779.png)
+List Comprehensions provide a concise way to create lists. 
+
+A list comprehension consists of brackets containing an expression followed by a `for` clause, then zero or more `for` or `if` clauses. 
+
+Note how the order of the `for`and `if` statements is the same in both these snippets.
+
+If the expression is a tuple (e.g. the `(x, y)` in the previous example), it must be parenthesized.
 
 
 
+- example 1
 
-
-
-
-
-
-列表解析
-
-列表解析允许你只编写一行代码就生成列表
-
-**列表解析将 for循环和创建新元素的代码合并成一行，并自动添加新元素**
-
-```python
-squares = [value**2 for value in range(1,11)]
+```
+>>> squares = []
+>>> for x in range(10):
+...     squares.append(x**2)
+...
+>>> squares
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 ```
 
-方括号内结构 ：
+Note that this creates (or overwrites ) a variable named x that still exists after the loop completes. We can calculate the list of squares without any side effects using:
 
-1.**定义一个表达式用于生成你要存储到列表中的值** 
+`squares = list(map(lambda x: x**2, range(10)))`
 
-2.**编写一个for循环，用于给表达式提供值** 
+or , equivalently :
+
+`squares = [x**2 for x in range(10)]`
+
+
+
+- another example
+
+  ```python
+  >>> [(x,y) fpr x in [1,2,3] for y in [3,1,4] if x != y]
+  [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+  ```
+
+  equivalent to :
+
+  ```
+  >>> combs = []
+  >>> for x in [1,2,3]:
+  ...     for y in [3,1,4]:
+  ...         if x != y:
+  ...             combs.append((x, y))
+  ...
+  >>> combs
+  [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
+  ```
+
+
+
+List comprehensions can contain complex expressions and nested functions:
+
+```
+>>> from math import pi
+>>> [str(round(pi, i)) for i in range(1, 6)]
+['3.1', '3.14', '3.142', '3.1416', '3.14159']
+```
+
+
+
+
+
+**Nested List Comprehensions**
+
+The initial expression in a list comprehension can be any arbitrary expression, including another list comprehension.
+
+Consider the following example of a 3x4 matrix implemented as a list of 3 lists of length 4:
+
+```
+>>> matrix = [
+...     [1, 2, 3, 4],
+...     [5, 6, 7, 8],
+...     [9, 10, 11, 12],
+... ]
+```
+
+
+
+The following list comprehension will transpose rows and columns:
+
+```
+>>> [[row[i] for row in matrix] for i in range(4)]
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+```
+
+ equivalent to:
+
+```
+>>> transposed = []
+>>> for i in range(4):
+...     transposed.append([row[i] for row in matrix])
+...
+>>> transposed
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+```
+
+which, in turn, is the same as:
+
+```
+>>> transposed = []
+>>> for i in range(4):
+...     # the following 3 lines implement the nested listcomp
+...     transposed_row = []
+...     for row in matrix:
+...         transposed_row.append(row[i])
+...     transposed.append(transposed_row)
+...
+>>> transposed
+[[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+```
+
+
+
+In the real world, you should prefer built-in functions to complex flow statements. The [`zip()`](https://docs.python.org/3.12/library/functions.html#zip) function would do a great job for this use case:
+
+```
+>>> list(zip(*matrix))
+[(1, 5, 9), (2, 6, 10), (3, 7, 11), (4, 8, 12)]
+```
 
 
 
@@ -1753,8 +1851,6 @@ Return the number of entries in the dictionary.
 
 
 
-
-
 ### **iter(dictview)**
 
 Return an iterator over the keys, values or items (represented as tuples of `(key, value)`) in the dictionary.
@@ -1776,7 +1872,7 @@ for item in zip([1, 2, 3], ['sugar', 'spice', 'everything nice']):
     print(item)
 ```
 
-
+returns an iterator of tuples, where the *i*-th tuple contains the *i*-th element from each of the argument iterables.
 
 
 
@@ -2594,6 +2690,20 @@ from module_name import function_name as fn
 ```python
 import module_name as mn
 ```
+
+
+
+### lambda 
+
+An anonymous inline function consisting of a single expression which is evaluated when the function is called. 
+
+syntax : `lambda [parameters]: expression`
+
+
+
+
+
+
 
 
 

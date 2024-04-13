@@ -121,10 +121,6 @@ def parse_xml(path):
 
     return dic
 
-create_xml("./t.xml")
-dic = parse_xml("./t.xml")
-print(dic)
-
 
 
 if __name__ == "__main__":

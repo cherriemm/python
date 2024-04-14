@@ -1,8 +1,37 @@
+# basic
+
 **命名**
 
 - 变量名只能包含字母、数字、下划线。变量名不可以以数字打头。
 
-  
+
+
+
+## 类型提示
+
+我们知道 Python 是一种动态语言，变量以及函数的参数是**不区分类型**。因此我们定义函数只需要这样写就可以了：
+
+```python3
+def add(x, y):
+    return x + y
+```
+
+这样的好处是有极大的灵活性，但坏处就是对于别人代码，无法一眼判断出参数的类型，IDE 也无法给出正确的提示。
+
+于是 Python 3 提供了一个新的特性：**类型提示**
+
+用 `: datatype` 指定函数的参数类型，用 `-> datatype` 指定函数的返回值类型, `|` 表明可返回多种返回值类型
+
+```python
+def add(x:int = 5, y:int = 0) -> int | None:
+    return x + y
+```
+
+- **ATTENTION** : Python 解释器并不会因为这些注解而提供额外的校验，没有任何的类型检查工作。也就是说，这些类型注解加不加，对你的代码来说没有任何影响
+
+
+
+
 
 ## numbers
 
@@ -2260,107 +2289,105 @@ for name, response in responses.items():
 
 # 函数
 
-## 格式
-
-给形参指定默认值时，等号两边不要有空格 ，对于函数调用中的关键值实参同理。
-
-参数过长时：
-
-```python
-def function_name(
-		parameter_0, parameter_1, parameter_2, parameter_3)
-	function body
-```
 
 
+## 基操
 
-
-
-
-
-## 定义函数
+- **定义函数**
 
 ```python
-def greet_user(username): #函数定义
+def greet_user(username): 
     print("Hello," + username.title() + "!")
     
 greet_user('jesse') #函数调用
 ```
 
-关键字def告诉python你要定义一个函数。这是函数定义，向python指出了函数名，还可能在括号内指出函数为完成其任务需要什么样的信息。
+
+
+- **传递实参的两种方式**
+
+  **位置实参**:  实参和形参的顺序相同
+
+  **关键字实参**：每个实参都由变量名和值组成
+
+  - **位置实参**
+
+    基于形参位置传递实参
+
+    ```python
+    def describe_pet(animal_type, pet_name):
+        print("My " + animal_type + "'s name is " + pet_name.title() + ".")
+        
+    describe_pet('hamster', 'harry')
+    describe_pet('dog', 'willie')
+    ```
+
+  - **关键字实参**
+
+    关键字实参 : 传递给函数的 *名称-值* 对, 因此实参和形参顺序无需一致 。
+
+    ```python
+    describe_pet(animal_type='hamster', pet_name='harry')
+    describe_pet(pet_name='harry', animal_type='hamster')
+    ```
 
 
 
-## 传递实参
-
-向函数传递实参的方法：
-
-可使用**位置实参**，这要求实参的顺序和形参的顺序相同；也可使用**关键字实参**，其中每个实参都由变量名和值组成；还可使用列表和字典
 
 
+- **默认值**
 
-### 位置实参
+  - **给形参指定默认值时，等号两边不要有空格** 
 
-函数调用中的每个实参关联到函数定义中的一个形参。为此最简单的关联方法是基于实参的顺序。这种关联方式被称为**位置实参**
+  - 调用函数时若提供实参，则使用指定的实参值；否则，使用形参的默认值 。
 
-```python
-def describe_pet(animal_type, pet_name):
-    """显示宠物的信息"""
-    print("\nI have a " + animal_type + ".")
-    print("My " + animal_type + "'s name is " + pet_name.title() + ".")
-    
-describe_pet('hamster', 'harry')
-describe_pet('dog', 'willie')
-```
-
-
-
-### 关键字实参
-
-关键字实参是传递给函数的 名称-值 对。你直接在实参中将名称和值关联起来了。
-
-```python
-describe_pet(animal_type='hamster', pet_name='harry')
-describe_pet(pet_name='harry', animal_type='hamster')
-```
-
-
-
-### 默认值
-
-编写函数时，可给每个形参指定默认值。
-
-在调用函数时给形参提供了实参时，python将使用指定的实参值；否则，将使用形参的默认值 。
+  - 形参列表中必须先列出没有默认值的形参，再列出有默认值的实参。否则可能导致没有默认值的实参没有值 。
 
 ```python
 def describe_pet(pet_name, animal_type = 'dog'):
-    print("\nI have a " + animal_type + ".")
+    ...
     
 describe_pet(pet_name='willie')
 ```
 
-使用默认值时 ，在形参列表中必须先列出没有默认值的形参，再列出有默认值的实参。这让python依然能够正确地解读位置实参。
+**应用 ：让实参变成可选的**
 
-**让实参变成可选的**
-
-让实参变成可选的这样使用函数的人就只需要在必要时才提供额外的信息。**可使用默认值来让实参变成可选的。**
+这样函数调用者只需在必要时才提供额外的信息。
 
 ```python
-def get_formatted_name(first_name,  last_name, middle_name=''):
-    """返回整洁的姓名"""
-    if middle_name:
-    	full_name = first_name + ' ' +last_name
-    else:
-        full
+def get_formatted_name(first_name,  last_name, middle_name=' '):
+	full_name = first_name + middle_name + last_name
     return full_name.title()
 
 musician = get_formatted_name('jimi','hendrix')
-print(musician)
+musician = get_formatted_name('jimi','hendrix', 'm')
 ```
 
 
 
-### 传递任意数量的实参
+
+
+- **传递列表**
+
+  - *在函数中对列表所做的任何修改都是永久性的*
+
+  - *若要禁止函数修改列表* ：向函数传递列表的副本，这样函数所做的任何修改都只影响副本，而不影响原件 `function(list[:])`
+
+    切片表示法[:]  : 创建列表的副本。
+
+    虽然向函数传递列表的副本可保留原始列表的内容，但除非有充分的理由需要传递副本，否则还是应该将原始列表传递给函数，可避免花时间和内存创建副本，从而提高效率
+
+
+
+
+
+## `*args` and `**kwargs`
+
+
+
+**传递任意数量的实参 : *args**
+
+The ` args ` stands for arguments that are passed to the function ,`*args `can also print data of various types which is passed into the function
 
 python允许函数从调用语句中收集任意数量的实参。
 
@@ -2370,38 +2397,39 @@ def make_pizza(*toppings):
     for topping in toppings:
         print("-" + topping)
 
-make_pizza('pepperoni')
 make_pizza('mushrooms', 'green peppers', 'extra cheese')
 ```
 
-形参名 *toppings 中的星号让python创建一个名为toppings的空元组，并将收到的所有值都封装到这个元组中。
+`*`让python创建一个名为toppings的空元组，并将收到的所有值都封装到这个元组中。
 
-#### **结合使用位置实参和任意数量实参**
 
-如果要让函数接受不同类型的实参，必须在函数定义中将接纳任意数量实参的形参放在最后。
 
-python先匹配位置实参和关键字实参，再将余下的实参都收集到最后一个形参中。
+**结合使用 位置实参 和 任意数量实参**
+
+python先匹配位置实参和关键字实参，再将余下的实参都收集到最后一个形参中。**因此函数定义中需将接纳任意数量实参的形参放在最后**
 
 ```python
 def make_pizza(size, *toppings):
     print("\nMaking a "+ str(size) + "-inch pizza with the following toppings:")
     for topping in toppings:
         print("- "+ topping)
-make_pizza(16, 'pepperoni')
 make_pizza(12, 'mushrooms', 'green peppers', 'extra cheese')
 ```
 
 
 
-#### 使用任意数量的关键字实参
+**传递任意数量的关键字实参 ： `**args`**
 
-有时候，需要接收任意数量的实参，但预先不知道传给函数的会是什么样的信息。在这种情况下，可将函数编写成能够接受任意数量的键值对
+`kwargs` stands for keyword arguments which are passed along with the values into the function（和值一起传递到函数中的关键字参数）
+
+
+
+有时需要接收任意数量的实参，但预先不知道传给函数的会是什么样的信息 ： 可将函数设为能够接受任意数量的键值对
 
 Example：创建用户简介，你知道将收到有关用户的信息，但不确定会是什么样的信息。
 
 ```python
 def build_profile(first, last, **user_info):
-    """创建一个字典，其中包含我们知道的有关用户的一切"""
     profile = {}
     profile['first_name'] = first
     profile['last_name'] = last
@@ -2410,153 +2438,15 @@ def build_profile(first, last, **user_info):
     return profile
 
 user_profile = build_profile('albert', 'einstein', location='princeton', field='physics')
-print(user_profile)
 ```
 
-形参 **user_info 中的两个星号让python创建一个名为 user_info 的空字典，并将收到的所有 名称- 值对都封装到这个字典中。
-
-
-
-### 传递列表
-
-```python
-def greet_users(names):
-    """向列表中的每位用户都发出简单的问候"""
-    for name in names:
-        msg = "Hello" + name.title() + "!"
-        print(msg)
-        
-usernames = ['hannah', 'ty', 'margot']
-greet_users(usernames)        
-```
-
-
-
-#### 在函数中修改列表
-
-在函数中对列表所做的任何修改都是永久性的
-
-在不使用函数的情况下：
-
-```python
-unprinted_designs = ['iphone case', 'robot pendant', 'dodecahedron']
-completed_models = []
-
-while unprinted_designs:
-    current_model = unprinted_designs.pop()
-    print("Printing model: "+ current_design)
-    completed_models.append(current_model)
-    
-print("\nThe following models have been printed:")
-for completed_model in completed_models:
-    print(completed_model)
-```
-
-为重新组织这些代码，我们可编写两个函数，每个都做一件具体的工作。第一个函数将负责处理打印设计的工作，而第二个将概述打印了哪些设计
-
-```python
-def print_models(unprinted_designs, completed_models):
-    """
-    模拟打印每个设计，直到没有未打印的设计为止
-    """
-    while unprinted_designs:
-        current_design = unprinted_designs.pop()
-        completed_designs.append(current_design)
-        
-def show_completed_models(completed_models)
-print("\nThe following models have been printed:")
-for completed_model in completed_models:
-    print(completed_model)
-    
-    
-unprinted_designs = ['iphone case', 'robot pendant', 'dodecahedron']
-completed_models = []
-print_models(unprinted_designs, completed_models)
-show_completed_models(completed_models)
-```
-
-
-
-#### 禁止函数修改列表
-
-向函数传递列表的副本而不是原件，这样函数所做的任何修改都只影响副本，而不影响原件。
-
-```python
-function_name(list_name[:])
-```
-
-切片表示法[:] 创建列表的副本。
-
-虽然向函数传递列表的副本可保留原始列表的内容，但除非有充分的理由需要传递副本，否则还是应该将原始列表传递给函数，可避免花时间和内存创建副本，从而提高效率
+形参 `**user_info `中的`**`让 python 创建一个名为 user_info 的空字典，并将收到的所有 `key-value`键值对封装到这个字典中。
 
 
 
 
 
 
-
-
-
-
-
-## 返回值
-
-
-
-### 返回简单值
-
-```python
-def get_formatted_name(first_name, last_name):
-    """返回整洁的姓名"""
-    full_name = first_name + ' ' +last_name
-    return full_name.title()
-
-musician = get_formatted_name('jimi','hendrix')
-print(musician)
-```
-
-
-
-### 返回字典
-
-```python
-def build_person(first_name, last_name， age=''):
-    """返回一个字典，其中包含有关一个人的信息"""
-    person = {
-        'first': first_name,
-        'last': last_name,
-    }
-    if age:
-        person['age'] = age
-    return person
-
-musician = build_person('jimi','hendrix')
-```
-
-
-
-**结合使用函数和while循环**
-
-```python
-def get_formatted_name(first_name, last_name):
-    """返回整洁的姓名"""
-    full_name = first_name + ' ' +last_name
-    return full_name.title()
-
-while True:
-    print("\nPlease tell me your name:")
-    print("enter 'q' at any time to quit")
-    f_name = input("First name: ")
-    if f_name == 'q':
-        break
-        
-    l_name = inpu("Last name: ")
-     if f_name == 'q':
-        break
-        
-    formatted_name = get_formatted_name(f_name, l_name)
-    print("\nHello, "+ formatted_name + "!")
-```
 
 
 
@@ -2697,9 +2587,116 @@ import module_name as mn
 
 An anonymous inline function consisting of a single expression which is evaluated when the function is called. 
 
-syntax : `lambda [parameters]: expression`
+syntax : `lambda [parameters]: expression
 
 
+
+
+
+## `__main__`
+
+
+
+When a developer executes a Python program, the interpreter sets several variables, including *__name__.* 
+
+two outcomes for the *__name__* variable:
+
+- If the script is run as a standalone application, __name__ is set to __main__.
+
+- If the script is imported, __name__ is set to the name of the module.
+
+  When a python module or package is imported,  `__name__` is set to the module's name. 
+
+  However, if the module is executed in the top-level code environment, its `__name__` is set to the string `'__main__'`.
+
+```python
+>>> import configparser
+>>> configparser.__name__
+'configparser'
+```
+
+
+
+
+
+- **What is the “top-level code environment”  ?**
+
+  `__main__` is the name of the environment where top-level code is run. “Top-level code” is the first user-specified Python module that starts running. It’s “top-level” because it imports all other modules that the program needs. Sometimes “top-level code” is called an *entry point* to the application.
+
+  
+
+  **The top-level code environment can be :**
+
+  - **the scope of an interactive prompt :**
+
+    ```python
+    >>> __name__
+    '__main__'
+    ```
+
+  
+
+  - **the Python module passed to the Python interpreter as a file argument:**
+
+    ```python
+    $ python helloworld.py
+    Hello, world!
+    ```
+
+  
+
+  - Python code passed to the Python interpreter with the [`-c`](https://docs.python.org/3/using/cmdline.html#cmdoption-c) argument:
+
+    ```
+    $ python -c "import this"
+    The Zen of Python, by Tim Peters
+    
+    Beautiful is better than ugly.
+    Explicit is better than implicit.
+    ...
+    ```
+
+​			and more ...
+
+In each of these situations, the top-level module’s `__name__` is set to `'__main__'`.
+
+
+
+#### Executing modules as scripts
+
+When you run a python module with `python fibo.py <arguments>`  , the code in the module will be executed, just as if you imported it, but with the `__name__` set to `"__main__" ` ，
+
+```python
+if __name__ == "__main__":
+    import sys
+    fib(int(sys.argv[1]))
+```
+
+ you can make the file usable as a script as well as an importable module, because the code that parses the command line only runs if the module is executed as "main" file:
+
+```
+python fibo.py 50
+0 1 1 2 3 5 8 13 21 34
+```
+
+If the module is imported, the code is not run:
+
+```
+>>> import fibo
+>>>
+```
+
+
+
+**When not to use *`if __name__ == "__main__"`***
+
+The *if name equals main* syntax is not required if all you want to do is run a Python script. New Python developers can code and explore a wide variety of AI, [machine learning](https://www.techtarget.com/searchapparchitecture/tip/Frameworks-libraries-and-languages-for-machine-learning) and [statistics libraries](https://www.techtarget.com/searchbusinessanalytics/feature/15-data-science-tools-to-consider-using) and never encounter a need to use the construct.
+
+The use of Python's `if __name__ == "__main__"`: makes the most sense in the following three scenarios:
+
+- You want to write code that executes only when the script is run as a main program and not when it is imported as a module.
+- You want to include test routines that run independently to validate functions defined in the file.
+- You want to include demonstration code that will not execute upon module import.
 
 
 
